@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Drowned Chart — Stage V</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Pirata+One&display=swap" rel="stylesheet">
+<!-- The sea keeps its secrets. The page keeps only the lock. -->
+<style>
+:root{
+  --ink:#2a1d10; --ink2:#4a3418; --parch:#e8d3a0; --parch2:#d3b374; --red:#8e1f17; --gold:#d6a238;
+  --deep:#04131a; --teal:#14434d;
+  --disp:'Pirata One','IM Fell English SC',Georgia,serif;
+  --cap:'Cinzel','IM Fell English SC',Georgia,serif;
+  --body:'IM Fell English','Palatino Linotype',Palatino,Georgia,serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--deep);color:#e9dcc0;font-family:var(--body);font-size:18px;line-height:1.55;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-2;
+  background:
+   radial-gradient(1200px 700px at 70% -10%,rgba(30,100,115,.35),transparent 60%),
+   radial-gradient(900px 600px at 0% 100%,rgba(120,60,20,.22),transparent 60%),
+   linear-gradient(180deg,#041820,#06222c 55%,#031016)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;opacity:.5;pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 .6  0 0 0 0 .7  0 0 0 0 .8  0 0 0 .07 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+button{font-family:inherit}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;text-align:center;padding:84px 20px 150px;overflow:hidden}
+.hero .tag{font-family:var(--cap);letter-spacing:.5em;font-size:13px;color:var(--gold);opacity:.9}
+.hero h1{font-family:var(--disp);font-weight:400;font-size:clamp(54px,11vw,128px);line-height:.95;margin:16px 0 10px;letter-spacing:.02em;
+  background:linear-gradient(100deg,#8f6a1f 0%,#f5d98b 28%,#c9962f 48%,#fff0b8 62%,#b07d22 100%);background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s ease-in-out infinite;filter:drop-shadow(0 4px 18px rgba(0,0,0,.6))}
+@keyframes shine{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
+.hero .sub{font-family:var(--cap);letter-spacing:.32em;text-transform:uppercase;font-size:clamp(12px,2.2vw,16px);color:#a8c4c8}
+.hero .lede{max-width:640px;margin:26px auto 0;color:#c9bd9f;font-style:italic}
+.waves{position:absolute;left:0;right:0;bottom:0;height:130px;pointer-events:none}
+.waves svg{position:absolute;bottom:0;left:0;width:200%;height:100%}
+.w1{animation:drift 22s linear infinite}.w2{animation:drift 14s linear infinite reverse;opacity:.7}.w3{animation:drift 30s linear infinite;opacity:.5}
+@keyframes drift{to{transform:translateX(-50%)}}
+.ship{position:absolute;bottom:62px;left:12%;width:130px;animation:bob 5s ease-in-out infinite;opacity:.9}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+
+/* ---------- PARCHMENT CARDS ---------- */
+.card{position:relative;isolation:isolate;max-width:1000px;margin:34px auto 70px;padding:46px clamp(20px,5vw,60px) 40px;color:var(--ink);width:calc(100% - 28px)}
+.card::before{content:"";position:absolute;inset:-6px;z-index:-1;
+  background:
+   url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' seed='4'/><feColorMatrix values='0 0 0 0 .32  0 0 0 0 .2  0 0 0 0 .06  0 0 0 .26 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+   radial-gradient(120% 90% at 30% 20%,#f0dcab 0%,var(--parch) 45%,var(--parch2) 100%);
+  box-shadow:inset 0 0 90px rgba(95,45,10,.6),inset 0 0 14px rgba(60,28,5,.7);
+  filter:url(#torn) drop-shadow(0 22px 26px rgba(0,0,0,.6))}
+.ph{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.num{font-family:var(--disp);font-size:54px;line-height:1;color:var(--red);min-width:64px;text-align:center;border:2px solid var(--red);border-radius:50%;padding:6px 8px 2px;box-shadow:inset 0 0 0 3px rgba(232,211,160,.9),inset 0 0 0 4px var(--red)}
+.card h2{font-family:var(--disp);font-weight:400;font-size:clamp(32px,6vw,52px);margin:0;letter-spacing:.03em;color:var(--ink)}
+.epi{font-style:italic;color:var(--ink2);margin:10px 0 24px;font-size:20px;border-left:3px solid rgba(142,31,23,.5);padding-left:14px}
+.ctag{margin:-8px 0 22px;font-family:var(--cap);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.ctag span{color:var(--red);margin-right:12px;font-size:11px;letter-spacing:.24em}
+.part.sealed .ctag{display:none}
+.how{margin:0 0 24px;border:1px dashed rgba(42,29,16,.5);padding:10px 16px;background:rgba(255,248,222,.25)}
+.how summary{cursor:pointer;font-family:var(--cap);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--red)}
+.how p{margin:8px 0 2px;font-size:16px;font-style:italic;color:var(--ink2);line-height:1.5}
+.how b{font-style:normal;color:var(--ink)}
+.part.sealed .how{display:none}
+.cap{font-family:var(--cap);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--red)}
+.card p{margin:.6em 0}
+
+/* sealed state */
+.lock{display:none;text-align:center;padding:30px 10px}
+.part.sealed .body,.part.sealed .ph,.part.sealed .epi{display:none}
+.part.sealed .lock{display:block}
+.part.sealed{max-width:560px}
+.lock .wax{width:96px;height:96px;margin:0 auto 10px;display:block;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
+.lock b{font-family:var(--disp);font-weight:400;font-size:30px;display:block}
+.lock span{font-style:italic;color:var(--ink2)}
+
+/* ---------- OVERVIEW MAP ---------- */
+.mapwrap{margin-top:8px;border:2px solid var(--ink);padding:6px;background:rgba(255,248,220,.18);box-shadow:inset 0 0 0 3px rgba(232,211,160,.8),inset 0 0 0 4px var(--ink)}
+.mapsvg{display:block;width:100%;height:auto}
+.mapsvg text{font-family:var(--cap);fill:var(--ink)}
+.mapsvg .isl{fill:#e2c98a;stroke:var(--ink2);stroke-width:2.4;stroke-linejoin:round}
+.mapsvg .isl2{fill:none;stroke:var(--ink2);stroke-width:1;stroke-dasharray:3 5;opacity:.7}
+.seg{fill:none;stroke:var(--ink2);stroke-width:3;stroke-dasharray:2 9;stroke-linecap:round;opacity:.35}
+.seg.lit{stroke:var(--red);opacity:1;animation:march 1.2s linear infinite}
+@keyframes march{to{stroke-dashoffset:-22}}
+.stn{cursor:pointer}
+.stn .ring{fill:#f0dcab;stroke:var(--ink);stroke-width:2.5}
+.stn text{font-family:var(--disp);font-size:30px;text-anchor:middle;fill:var(--ink)}
+.stn .lbl{font-family:var(--cap);font-size:15px;letter-spacing:.14em;fill:var(--ink)}
+.stn.locked{opacity:.38;cursor:not-allowed}
+.stn.open .ring{fill:#fff0c0;animation:pulse 1.6s ease-in-out infinite}
+.stn.done .ring{fill:var(--red);stroke:#3a0d09}.stn.done text.n{fill:#f6e4b4}
+@keyframes pulse{0%,100%{stroke-width:2.5}50%{stroke-width:6}}
+.rose-g .rg-ring{fill:none;stroke:var(--ink);stroke-width:1.6}
+.rose-g .rg-ring.thin{stroke-width:1;fill:rgba(232,211,160,.9)}
+.rp{fill:var(--ink);stroke:var(--ink);stroke-width:.6;stroke-linejoin:round}
+.rp.d{fill:#f2dfae}
+.rp.c{fill:#7c1912;stroke:#4d0d08}.rp.c.d{fill:#f2dfae}
+.rn-t{font-family:var(--disp);font-size:26px;fill:var(--red)}
+.mapnote{font-style:italic;font-size:15px;color:var(--ink2);margin:10px 4px 0}
+.rot{font-family:var(--cap);font-size:9px;letter-spacing:.3em;opacity:.45}
+.legend{display:flex;flex-wrap:wrap;gap:8px 26px;align-items:center;justify-content:space-between;margin-top:14px}
+.progress{font-family:var(--cap);letter-spacing:.2em;font-size:13px;text-transform:uppercase}
+.progress b{color:var(--red);font-size:20px}
+.link{background:none;border:0;color:var(--red);text-decoration:underline;cursor:pointer;font-size:14px;padding:0;font-style:italic}
+
+/* ---------- ANSWER FORM & HINTS ---------- */
+.ans{margin-top:30px;padding-top:22px;border-top:1px dashed rgba(42,29,16,.5)}
+.ans label{display:block;font-family:var(--cap);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row input{flex:1 1 220px;min-width:0;background:rgba(255,248,222,.55);border:2px solid var(--ink);padding:12px 14px;font:inherit;font-size:22px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);outline:none;border-radius:2px}
+.row input:focus{background:rgba(255,248,222,.85);box-shadow:0 0 0 3px rgba(142,31,23,.35)}
+.btn{background:linear-gradient(180deg,#a22a1f,#6f140d);color:#f7e8bf;border:2px solid #3a0d09;padding:12px 22px;font-family:var(--cap);letter-spacing:.2em;text-transform:uppercase;font-size:13px;cursor:pointer;border-radius:2px;box-shadow:0 3px 0 #3a0d09,0 8px 14px rgba(0,0,0,.3);transition:transform .08s}
+.btn:hover{filter:brightness(1.12)}.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #3a0d09}
+.msg{min-height:1.6em;margin:10px 0 0;font-style:italic;color:var(--ink2)}
+.msg.bad{color:var(--red)}
+.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.hints{margin-top:14px}
+.hbtn{background:none;border:1px solid rgba(42,29,16,.55);color:var(--ink2);padding:6px 12px;font-family:var(--cap);font-size:11px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;border-radius:2px}
+.hbtn:hover{background:rgba(42,29,16,.08)}.hbtn[disabled]{opacity:.45;cursor:default}
+.hints ol{margin:12px 0 0;padding-left:1.4em;font-style:italic;color:var(--ink2);font-size:16px}
+.hints li{margin:4px 0}
+
+/* ---------- PART I ---------- */
+.p1grid{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:28px;align-items:center}
+@media(max-width:760px){.p1grid{grid-template-columns:1fr}}
+.rose-svg{width:100%;height:auto;display:block;max-width:340px;margin:0 auto}
+.rose figcaption{font-style:italic;text-align:center;font-size:16px;color:var(--ink2);margin-top:6px}
+.rose{margin:0}
+.faint{display:block;margin-top:8px;font-size:13px;opacity:.5;letter-spacing:.04em}
+.scroll{background:rgba(255,248,222,.38);border:1px solid rgba(42,29,16,.45);padding:18px 18px 8px;box-shadow:inset 0 0 30px rgba(120,70,20,.25)}
+.scroll ul{list-style:none;margin:0;padding:0}
+.scroll li{display:flex;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px dotted rgba(42,29,16,.35)}
+.scroll li:last-child{border:0}
+.scroll b{font-family:var(--disp);font-weight:400;color:var(--red);min-width:2.6em;font-size:22px;text-align:right}
+.scroll span{font-family:'IM Fell English SC',var(--body);letter-spacing:.14em;font-size:19px;word-spacing:.35em;line-height:1.35}
+
+/* ---------- PART II ---------- */
+.lighthouse{width:100%;height:auto;display:block;border:2px solid var(--ink);background:#06141c;box-shadow:inset 0 0 0 3px rgba(232,211,160,.8),inset 0 0 0 4px var(--ink)}
+.lampbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0 4px}
+.lampbar .small{font-style:italic;font-size:14px;color:var(--ink2)}
+.log{margin-top:18px;background:rgba(255,248,222,.38);border:1px solid rgba(42,29,16,.45);padding:16px 20px;box-shadow:inset 0 0 30px rgba(120,70,20,.25)}
+.log .cipher{font-family:'IM Fell English SC',var(--body);letter-spacing:.3em;font-size:22px;word-spacing:.7em;line-height:1.8;margin:6px 0 0;overflow-wrap:anywhere}
+
+/* ---------- PART III ---------- */
+.pigrow{display:flex;flex-wrap:wrap;gap:12px 20px;padding:18px;background:rgba(255,248,222,.38);border:1px solid rgba(42,29,16,.45);box-shadow:inset 0 0 30px rgba(120,70,20,.25)}
+.pw{display:block;stroke:var(--ink);stroke-width:1.9;stroke-linecap:square;fill:none;overflow:visible}
+.pw .dt{fill:var(--ink);stroke:none}
+.gridwrap{margin-top:26px;display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.compass{font-family:var(--cap);font-size:12px;letter-spacing:.2em;text-align:center;color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;width:min(100%,470px);padding:8px;background:rgba(255,248,222,.3);border:2px solid var(--ink);box-shadow:inset 0 0 0 3px rgba(232,211,160,.8),inset 0 0 0 4px var(--ink)}
+.gc{position:relative;aspect-ratio:1;border:1px solid rgba(42,29,16,.35);background:rgba(255,248,222,.4);color:var(--ink);cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}
+.gc i{font-style:normal;font-family:var(--cap);font-weight:700;font-size:clamp(13px,3.2vw,22px)}
+.gc.on{background:rgba(142,31,23,.28)}
+.gc:hover{background:rgba(142,31,23,.14)}
+.gc.st{box-shadow:inset 0 0 0 2px var(--red)}
+.sk{position:absolute;left:1px;top:1px;width:38%;fill:var(--red)}.sk .eye{fill:#f0dcab}
+.sidenote{flex:1 1 200px;font-style:italic;color:var(--ink2);font-size:16px}
+
+/* ---------- PART IV ---------- */
+.night{position:relative;min-height:190px;background:radial-gradient(80% 60% at 50% 100%,#0e2c38,#050f16);border:2px solid var(--ink);overflow:hidden;touch-action:pan-y;cursor:none;user-select:text;
+  box-shadow:inset 0 0 0 3px rgba(232,211,160,.8),inset 0 0 0 4px var(--ink)}
+.night.wide{cursor:default}
+.night .cwrap{display:flex;flex-wrap:wrap;gap:34px 30px;padding:56px 34px;justify-content:center}
+.night .cw{position:relative;font-family:'IM Fell English',Georgia,serif;font-size:clamp(22px,4.6vw,34px);letter-spacing:.06em;white-space:nowrap}
+.cw .a{display:inline-block;font-style:normal;color:#d7c79c}
+.cw .b{display:inline-block;font-style:normal;transform:skewX(-16deg);color:#f2bb4b;padding:0 .04em}
+.cw .rn{position:absolute;left:-1.2em;top:-1.1em;font-size:13px;color:#7fa7ad;font-style:normal;letter-spacing:.1em;font-family:var(--cap)}
+.bkey{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:6px;margin:14px 0 0}
+.bk{display:flex;justify-content:space-between;align-items:baseline;border:1px solid rgba(42,29,16,.35);background:rgba(255,248,222,.3);padding:3px 9px}
+.bk b{font-family:var(--cap);color:var(--red)}
+.bk code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;letter-spacing:.12em}
+.scr{position:absolute;color:#4d7078;font-family:var(--cap);font-size:20px;letter-spacing:.2em;opacity:.8}
+.dark{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle var(--r,175px) at var(--x,-400px) var(--y,-400px),rgba(2,7,11,0) 0,rgba(2,7,11,.18) 45%,rgba(2,7,11,.985) 100%)}
+.night .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle calc(var(--r,175px)*.9) at var(--x,-400px) var(--y,-400px),rgba(255,190,90,.14),transparent 70%);mix-blend-mode:screen}
+
+/* ---------- PART V ---------- */
+.seals{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:6px 0 18px}
+.seal{width:76px;height:76px;position:relative}
+.seal svg{width:100%;height:100%;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4))}
+.seal span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:30px;color:#f0c9c0;text-shadow:0 1px 0 #3a0d09}
+.riddle{font-size:20px;font-style:italic;text-align:center;max-width:640px;margin:0 auto;line-height:1.7}
+.plates{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:26px 0 6px}
+.plate{width:50px;height:62px;display:flex;align-items:center;justify-content:center;font-family:var(--cap);font-weight:700;font-size:30px;color:#3a2606;
+  background:linear-gradient(145deg,#f2d27a,#b98421 55%,#e9c565);border:2px solid #5b3d0c;border-radius:4px;box-shadow:inset 0 0 8px rgba(255,255,255,.4),0 4px 8px rgba(0,0,0,.35)}
+.dials{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:6px 0 4px}
+.dial{width:46px;height:62px;text-align:center;font-family:var(--cap);font-weight:700;font-size:30px;color:#f0d78e;text-transform:uppercase;outline:none;
+  background:linear-gradient(180deg,#0e0a06,#2b1d0d 50%,#0e0a06);border:2px solid #5b3d0c;border-radius:4px;box-shadow:inset 0 0 10px #000;caret-color:transparent;padding:0}
+.dial:focus{border-color:var(--red);box-shadow:inset 0 0 10px #000,0 0 0 3px rgba(142,31,23,.45)}
+.center{text-align:center}
+
+/* ---------- WIN ---------- */
+#win{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;
+  background:radial-gradient(70% 60% at 50% 45%,rgba(120,80,10,.55),rgba(2,8,12,.97))}
+#win.show{display:flex;animation:fadein 1.2s}
+@keyframes fadein{from{opacity:0}}
+#win .t{font-family:var(--disp);font-size:clamp(56px,14vw,160px);line-height:1;margin:6px 0;letter-spacing:.06em;
+  background:linear-gradient(100deg,#8f6a1f,#f5d98b 30%,#c9962f 50%,#fff0b8 65%,#b07d22);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s ease-in-out infinite}
+#win .k{font-family:var(--cap);letter-spacing:.4em;color:#a8c4c8;font-size:13px;text-transform:uppercase}
+#win p{max-width:520px;color:#d8caa6;font-style:italic}
+#win svg{width:150px;margin-bottom:10px}
+.sparks i{position:absolute;width:6px;height:6px;background:#ffe08a;border-radius:50%;box-shadow:0 0 12px 3px rgba(255,210,100,.8);animation:rise 4s linear infinite}
+@keyframes rise{from{transform:translateY(0);opacity:0}15%{opacity:1}to{transform:translateY(-70vh);opacity:0}}
+
+footer{text-align:center;padding:10px 20px 70px;color:#7f9aa0;font-size:14px;font-style:italic}
+footer .link{color:#9fbcc2}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="torn" x="-4%" y="-4%" width="108%" height="108%"><feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="4" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="16"/></filter>
+  <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="6"/></filter>
+  <pattern id="wv" width="44" height="24" patternUnits="userSpaceOnUse"><path d="M0 12q11-9 22 0t22 0" fill="none" stroke="#6b5636" stroke-opacity=".28" stroke-width="1.2"/></pattern>
+  <symbol id="waxs" viewBox="0 0 100 100"><path d="M50 4c10 0 14 8 24 9 9 1 15 8 13 18-2 9 6 14 6 22 0 9-8 13-9 21-1 10-9 17-19 16-9-1-14 7-23 7S33 90 26 83c-8-7-17-9-17-20 0-9 8-14 7-23-1-9 5-17 14-19 9-2 12-10 20-16z" fill="#8e1f17"/><path d="M50 14c8 0 11 7 19 8 8 1 12 7 11 14-1 7 5 12 5 18 0 7-6 10-7 17-1 8-8 13-15 12-8-1-12 6-19 6s-12-6-18-11c-7-5-13-8-13-16 0-7 6-11 5-18-1-7 4-13 11-15 8-2 10-9 17-15z" fill="#a52c20"/></symbol>
+</defs></svg>
+
+<header class="hero">
+  <div class="tag">STAGE V</div>
+  <h1>The Drowned Chart</h1>
+  <div class="sub">Five seals &nbsp;·&nbsp; One word</div>
+  <p class="lede">Captain Ismene Vane went down with her ship and her fortune. The sea washed her chart ashore in five torn pieces, each sealed in wax. Break them in order. The last one speaks.</p>
+  <div class="waves" aria-hidden="true">
+    <svg class="w3" viewBox="0 0 1200 130" preserveAspectRatio="none"><path d="M0 70q75-40 150 0t150 0 150 0 150 0 150 0 150 0 150 0 150 0V130H0z" fill="#0b3440"/></svg>
+    <svg class="w2" viewBox="0 0 1200 130" preserveAspectRatio="none"><path d="M0 85q50-30 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0 100 0 100 0 100 0 100 0V130H0z" fill="#082a35"/></svg>
+    <svg class="w1" viewBox="0 0 1200 130" preserveAspectRatio="none"><path d="M0 100q60-26 120 0t120 0 120 0 120 0 120 0 120 0 120 0 120 0 120 0 120 0V130H0z" fill="#04131a"/></svg>
+  </div>
+  <svg class="ship" viewBox="0 0 130 100" aria-hidden="true"><path d="M8 62h114l-18 22H30z" fill="#1a0f08"/><path d="M64 8v54M64 12l40 34H64zM62 20L28 50h34z" fill="#c9b78a" stroke="#1a0f08" stroke-width="2"/><path d="M64 8l16 5-16 5z" fill="#8e1f17"/></svg>
+</header>
+
+<main>
+
+<!-- ===== THE CHART ===== -->
+<section class="card" id="chart">
+  <div class="cap">The salvaged chart</div>
+  <h2 style="margin:6px 0 14px">Where the seals lie</h2>
+  <div class="mapwrap">
+  <svg class="mapsvg" viewBox="0 0 1000 560" role="img" aria-label="Treasure map with five numbered stations joined by a dotted trail">
+    <rect width="1000" height="560" fill="url(#wv)"/>
+    <g transform="translate(0,0)"><g class="rose-g"><circle cx="150" cy="150" r="104" class="rg-ring"/><circle cx="150" cy="150" r="16" class="rg-ring thin"/><polygon class="rp c" points="150.0,50.0 144.3,135.1 150.0,134.0"/><polygon class="rp c d" points="150.0,50.0 150.0,134.0 155.7,135.1"/><polygon class="rp q" points="157.8,110.8 150.3,134.0 153.1,134.3"/><polygon class="rp q d" points="157.8,110.8 153.1,134.3 155.8,135.1"/><polygon class="rp h" points="172.2,96.4 152.6,134.2 156.1,135.2"/><polygon class="rp h d" points="172.2,96.4 156.1,135.2 159.3,137.0"/><polygon class="rp q" points="172.2,116.7 156.4,135.3 158.9,136.7"/><polygon class="rp q d" points="172.2,116.7 158.9,136.7 161.1,138.5"/><polygon class="rp o" points="205.2,94.8 157.4,135.8 161.3,138.7"/><polygon class="rp o d" points="205.2,94.8 161.3,138.7 164.2,142.6"/><polygon class="rp q" points="183.3,127.8 161.5,138.9 163.3,141.1"/><polygon class="rp q d" points="183.3,127.8 163.3,141.1 164.7,143.6"/><polygon class="rp h" points="203.6,127.8 163.0,140.7 164.8,143.9"/><polygon class="rp h d" points="203.6,127.8 164.8,143.9 165.8,147.4"/><polygon class="rp q" points="189.2,142.2 164.9,144.2 165.7,146.9"/><polygon class="rp q d" points="189.2,142.2 165.7,146.9 166.0,149.7"/><polygon class="rp c" points="250.0,150.0 164.9,144.3 166.0,150.0"/><polygon class="rp c d" points="250.0,150.0 166.0,150.0 164.9,155.7"/><polygon class="rp q" points="189.2,157.8 166.0,150.3 165.7,153.1"/><polygon class="rp q d" points="189.2,157.8 165.7,153.1 164.9,155.8"/><polygon class="rp h" points="203.6,172.2 165.8,152.6 164.8,156.1"/><polygon class="rp h d" points="203.6,172.2 164.8,156.1 163.0,159.3"/><polygon class="rp q" points="183.3,172.2 164.7,156.4 163.3,158.9"/><polygon class="rp q d" points="183.3,172.2 163.3,158.9 161.5,161.1"/><polygon class="rp o" points="205.2,205.2 164.2,157.4 161.3,161.3"/><polygon class="rp o d" points="205.2,205.2 161.3,161.3 157.4,164.2"/><polygon class="rp q" points="172.2,183.3 161.1,161.5 158.9,163.3"/><polygon class="rp q d" points="172.2,183.3 158.9,163.3 156.4,164.7"/><polygon class="rp h" points="172.2,203.6 159.3,163.0 156.1,164.8"/><polygon class="rp h d" points="172.2,203.6 156.1,164.8 152.6,165.8"/><polygon class="rp q" points="157.8,189.2 155.8,164.9 153.1,165.7"/><polygon class="rp q d" points="157.8,189.2 153.1,165.7 150.3,166.0"/><polygon class="rp c" points="150.0,250.0 155.7,164.9 150.0,166.0"/><polygon class="rp c d" points="150.0,250.0 150.0,166.0 144.3,164.9"/><polygon class="rp q" points="142.2,189.2 149.7,166.0 146.9,165.7"/><polygon class="rp q d" points="142.2,189.2 146.9,165.7 144.2,164.9"/><polygon class="rp h" points="127.8,203.6 147.4,165.8 143.9,164.8"/><polygon class="rp h d" points="127.8,203.6 143.9,164.8 140.7,163.0"/><polygon class="rp q" points="127.8,183.3 143.6,164.7 141.1,163.3"/><polygon class="rp q d" points="127.8,183.3 141.1,163.3 138.9,161.5"/><polygon class="rp o" points="94.8,205.2 142.6,164.2 138.7,161.3"/><polygon class="rp o d" points="94.8,205.2 138.7,161.3 135.8,157.4"/><polygon class="rp q" points="116.7,172.2 138.5,161.1 136.7,158.9"/><polygon class="rp q d" points="116.7,172.2 136.7,158.9 135.3,156.4"/><polygon class="rp h" points="96.4,172.2 137.0,159.3 135.2,156.1"/><polygon class="rp h d" points="96.4,172.2 135.2,156.1 134.2,152.6"/><polygon class="rp q" points="110.8,157.8 135.1,155.8 134.3,153.1"/><polygon class="rp q d" points="110.8,157.8 134.3,153.1 134.0,150.3"/><polygon class="rp c" points="50.0,150.0 135.1,155.7 134.0,150.0"/><polygon class="rp c d" points="50.0,150.0 134.0,150.0 135.1,144.3"/><polygon class="rp q" points="110.8,142.2 134.0,149.7 134.3,146.9"/><polygon class="rp q d" points="110.8,142.2 134.3,146.9 135.1,144.2"/><polygon class="rp h" points="96.4,127.8 134.2,147.4 135.2,143.9"/><polygon class="rp h d" points="96.4,127.8 135.2,143.9 137.0,140.7"/><polygon class="rp q" points="116.7,127.8 135.3,143.6 136.7,141.1"/><polygon class="rp q d" points="116.7,127.8 136.7,141.1 138.5,138.9"/><polygon class="rp o" points="94.8,94.8 135.8,142.6 138.7,138.7"/><polygon class="rp o d" points="94.8,94.8 138.7,138.7 142.6,135.8"/><polygon class="rp q" points="127.8,116.7 138.9,138.5 141.1,136.7"/><polygon class="rp q d" points="127.8,116.7 141.1,136.7 143.6,135.3"/><polygon class="rp h" points="127.8,96.4 140.7,137.0 143.9,135.2"/><polygon class="rp h d" points="127.8,96.4 143.9,135.2 147.4,134.2"/><polygon class="rp q" points="142.2,110.8 144.2,135.1 146.9,134.3"/><polygon class="rp q d" points="142.2,110.8 146.9,134.3 149.7,134.0"/><text x="150" y="38" class="rn-t" text-anchor="middle">N</text></g></g>
+    <!-- islands -->
+    <g>
+      <path class="isl" d="M175 440c-12-40 20-70 70-72 40-2 80 20 84 52 3 32-30 52-78 54-40 2-68-8-76-34z"/><path class="isl2" d="M190 436c-6-26 18-50 56-52 32-1 62 14 66 40"/>
+      <path class="isl" d="M350 300c-10-34 18-62 62-64 44-2 84 18 86 50 2 34-34 52-76 54-40 2-64-14-72-40z"/><path class="isl2" d="M366 296c-4-22 18-44 50-46"/>
+      <path class="isl" d="M510 450c-6-34 24-60 70-60 48 0 86 20 86 52 0 30-36 48-80 48-44 0-70-14-76-40z"/><path class="isl2" d="M526 446c0-22 22-40 54-42"/>
+      <path class="isl" d="M670 270c-10-34 14-64 62-66 46-2 80 18 80 50 0 34-34 54-78 56-40 2-56-16-64-40z"/><path class="isl2" d="M688 266c0-20 20-40 48-42"/>
+      <path class="isl" d="M830 440c-8-30 18-54 62-54 42 0 70 18 68 48-2 30-34 46-70 46-34 0-54-14-60-40z"/><path class="isl2" d="M846 436c2-18 20-34 46-34"/>
+    </g>
+    <!-- sea serpent & decor -->
+    <path d="M60 520q20-30 40-6t40-6 40 6 40-6" fill="none" stroke="#3b2a14" stroke-width="3.4" stroke-linecap="round" opacity=".7"/>
+    <circle cx="260" cy="504" r="7" fill="#3b2a14" opacity=".7"/>
+    <text x="700" y="528" font-size="16" letter-spacing="5" opacity=".65" font-style="italic">HERE BE DRAGONS</text>
+    <g transform="translate(580,120)" opacity=".75"><path d="M0 40h60l-10 14H10z" fill="#3b2a14"/><path d="M30 0v40M30 4l22 28H30zM28 10L8 34h20z" fill="#e8d3a0" stroke="#3b2a14" stroke-width="2"/></g>
+    <text class="rot" x="930" y="120" transform="rotate(90 930 120)">GUR FRN ERJNEQF GUR PHEVBHF OHG ABG GUR YNML</text>
+    <!-- trail -->
+    <path class="seg" data-s="1" d="M280 420C330 350 370 370 420 300"/>
+    <path class="seg" data-s="2" d="M450 290C520 230 540 400 590 440"/>
+    <path class="seg" data-s="3" d="M620 440C690 480 700 340 735 260"/>
+    <path class="seg" data-s="4" d="M765 250C830 200 890 330 890 410"/>
+    <!-- stations -->
+    <g class="stn" data-n="1" transform="translate(250,430)" tabindex="0" role="button" aria-label="Seal I"><circle class="ring" r="28"/><text class="n" y="11">I</text><text class="lbl" y="52" text-anchor="middle">ISLE OF MARGINS</text></g>
+    <g class="stn" data-n="2" transform="translate(425,285)" tabindex="0" role="button" aria-label="Seal II"><circle class="ring" r="28"/><text class="n" y="11">II</text><text class="lbl" y="-40" text-anchor="middle">KEEPER'S ROCK</text></g>
+    <g class="stn" data-n="3" transform="translate(595,440)" tabindex="0" role="button" aria-label="Seal III"><circle class="ring" r="28"/><text class="n" y="11">III</text><text class="lbl" y="52" text-anchor="middle">THE SHOALS</text></g>
+    <g class="stn" data-n="4" transform="translate(740,250)" tabindex="0" role="button" aria-label="Seal IV"><circle class="ring" r="28"/><text class="n" y="11">IV</text><text class="lbl" y="-40" text-anchor="middle">SEXTON'S REACH</text></g>
+    <g class="stn" data-n="5" transform="translate(890,425)" tabindex="0" role="button" aria-label="Seal V"><circle class="ring" r="28"/><text class="n" y="11">V</text><text class="lbl" y="52" text-anchor="middle">DEAD MAN'S X</text></g>
+  </svg>
+  </div>
+  <div class="legend">
+    <div class="progress">Seals broken <b id="prog">0</b> / 5</div>
+    <button class="link" id="reset" type="button">Start the voyage over</button>
+  </div>
+  <p class="mapnote">Every answer is a single word. Spaces and capitals do not matter to the wax. Only the sea cares about spelling.</p>
+</section>
+
+<!-- ===== I ===== -->
+<section class="card part" id="p1" data-n="1">
+  <div class="lock"><svg class="wax" viewBox="0 0 100 100"><use href="#waxs"/></svg><b>Sealed</b><span>Break the previous seal first.</span></div>
+  <div class="ph"><div class="num">I</div><h2>The Margin</h2></div>
+  <p class="epi">The flood took the binding. The sea kept the margins.</p>
+  <p class="ctag"><span>Cipher type</span>Caesar cipher &nbsp;·&nbsp; Acrostic</p>
+  <details class="how" open><summary>Cartographer's notes</summary><p>A <b>Caesar cipher</b> slides every letter a fixed number of places along the alphabet. To undo it, slide each letter the other way by the same amount. An <b>acrostic</b> hides a message in the opening letters of a poem. Nothing on this page needs a pencil but your own. Decode what is written, read it with care, and type a single word below.</p></details>
+  <div class="body">
+    <div class="p1grid">
+      <figure class="rose"><svg viewBox="0 0 300 300" class="rose-svg" role="img" aria-label="A compass rose"><g class="rose-g"><circle cx="150" cy="150" r="122.72" class="rg-ring"/><circle cx="150" cy="150" r="18.88" class="rg-ring thin"/><polygon class="rp c" points="150.0,32.0 143.3,132.4 150.0,131.1"/><polygon class="rp c d" points="150.0,32.0 150.0,131.1 156.7,132.4"/><polygon class="rp q" points="159.2,103.7 150.4,131.1 153.7,131.5"/><polygon class="rp q d" points="159.2,103.7 153.7,131.5 156.9,132.4"/><polygon class="rp h" points="176.2,86.8 153.1,131.4 157.2,132.6"/><polygon class="rp h d" points="176.2,86.8 157.2,132.6 161.0,134.7"/><polygon class="rp q" points="176.2,110.8 157.6,132.7 160.5,134.3"/><polygon class="rp q d" points="176.2,110.8 160.5,134.3 163.1,136.4"/><polygon class="rp o" points="215.1,84.9 158.7,133.2 163.4,136.6"/><polygon class="rp o d" points="215.1,84.9 163.4,136.6 166.8,141.3"/><polygon class="rp q" points="189.2,123.8 163.6,136.9 165.7,139.5"/><polygon class="rp q d" points="189.2,123.8 165.7,139.5 167.3,142.4"/><polygon class="rp h" points="213.2,123.8 165.3,139.0 167.4,142.8"/><polygon class="rp h d" points="213.2,123.8 167.4,142.8 168.6,146.9"/><polygon class="rp q" points="196.3,140.8 167.6,143.1 168.5,146.3"/><polygon class="rp q d" points="196.3,140.8 168.5,146.3 168.9,149.6"/><polygon class="rp c" points="268.0,150.0 167.6,143.3 168.9,150.0"/><polygon class="rp c d" points="268.0,150.0 168.9,150.0 167.6,156.7"/><polygon class="rp q" points="196.3,159.2 168.9,150.4 168.5,153.7"/><polygon class="rp q d" points="196.3,159.2 168.5,153.7 167.6,156.9"/><polygon class="rp h" points="213.2,176.2 168.6,153.1 167.4,157.2"/><polygon class="rp h d" points="213.2,176.2 167.4,157.2 165.3,161.0"/><polygon class="rp q" points="189.2,176.2 167.3,157.6 165.7,160.5"/><polygon class="rp q d" points="189.2,176.2 165.7,160.5 163.6,163.1"/><polygon class="rp o" points="215.1,215.1 166.8,158.7 163.4,163.4"/><polygon class="rp o d" points="215.1,215.1 163.4,163.4 158.7,166.8"/><polygon class="rp q" points="176.2,189.2 163.1,163.6 160.5,165.7"/><polygon class="rp q d" points="176.2,189.2 160.5,165.7 157.6,167.3"/><polygon class="rp h" points="176.2,213.2 161.0,165.3 157.2,167.4"/><polygon class="rp h d" points="176.2,213.2 157.2,167.4 153.1,168.6"/><polygon class="rp q" points="159.2,196.3 156.9,167.6 153.7,168.5"/><polygon class="rp q d" points="159.2,196.3 153.7,168.5 150.4,168.9"/><polygon class="rp c" points="150.0,268.0 156.7,167.6 150.0,168.9"/><polygon class="rp c d" points="150.0,268.0 150.0,168.9 143.3,167.6"/><polygon class="rp q" points="140.8,196.3 149.6,168.9 146.3,168.5"/><polygon class="rp q d" points="140.8,196.3 146.3,168.5 143.1,167.6"/><polygon class="rp h" points="123.8,213.2 146.9,168.6 142.8,167.4"/><polygon class="rp h d" points="123.8,213.2 142.8,167.4 139.0,165.3"/><polygon class="rp q" points="123.8,189.2 142.4,167.3 139.5,165.7"/><polygon class="rp q d" points="123.8,189.2 139.5,165.7 136.9,163.6"/><polygon class="rp o" points="84.9,215.1 141.3,166.8 136.6,163.4"/><polygon class="rp o d" points="84.9,215.1 136.6,163.4 133.2,158.7"/><polygon class="rp q" points="110.8,176.2 136.4,163.1 134.3,160.5"/><polygon class="rp q d" points="110.8,176.2 134.3,160.5 132.7,157.6"/><polygon class="rp h" points="86.8,176.2 134.7,161.0 132.6,157.2"/><polygon class="rp h d" points="86.8,176.2 132.6,157.2 131.4,153.1"/><polygon class="rp q" points="103.7,159.2 132.4,156.9 131.5,153.7"/><polygon class="rp q d" points="103.7,159.2 131.5,153.7 131.1,150.4"/><polygon class="rp c" points="32.0,150.0 132.4,156.7 131.1,150.0"/><polygon class="rp c d" points="32.0,150.0 131.1,150.0 132.4,143.3"/><polygon class="rp q" points="103.7,140.8 131.1,149.6 131.5,146.3"/><polygon class="rp q d" points="103.7,140.8 131.5,146.3 132.4,143.1"/><polygon class="rp h" points="86.8,123.8 131.4,146.9 132.6,142.8"/><polygon class="rp h d" points="86.8,123.8 132.6,142.8 134.7,139.0"/><polygon class="rp q" points="110.8,123.8 132.7,142.4 134.3,139.5"/><polygon class="rp q d" points="110.8,123.8 134.3,139.5 136.4,136.9"/><polygon class="rp o" points="84.9,84.9 133.2,141.3 136.6,136.6"/><polygon class="rp o d" points="84.9,84.9 136.6,136.6 141.3,133.2"/><polygon class="rp q" points="123.8,110.8 136.9,136.4 139.5,134.3"/><polygon class="rp q d" points="123.8,110.8 139.5,134.3 142.4,132.7"/><polygon class="rp h" points="123.8,86.8 139.0,134.7 142.8,132.6"/><polygon class="rp h d" points="123.8,86.8 142.8,132.6 146.9,131.4"/><polygon class="rp q" points="140.8,103.7 143.1,132.4 146.3,131.5"/><polygon class="rp q d" points="140.8,103.7 146.3,131.5 149.6,131.1"/><text x="150" y="17.84" class="rn-t" text-anchor="middle">N</text></g></svg><figcaption>“As many winds as crown this rose, but the alphabet is shorter than the sea.”<span class="faint">Tally the winds. What they pushed ahead, the tide brings back.</span></figcaption></figure>
+      <div>
+        <div class="cap" style="margin-bottom:6px">Pages from the captain's verse, loose in the flood</div>
+        <div class="scroll"><ul><li><b>IV</b><span>ZKRR OZ ZU ZNK MGZK GTJ ZNK MGZK YCOTMY COJK</span></li><li><b>VI</b><span>TUC MU LUXZN GTJ YVKGQ ZNK TGSK GRUAJ</span></li><li><b>II</b><span>XKGJ JUCT ZNK BKXYK LXUS OZY NKGJ ZU OZY LUUZ</span></li><li><b>I</b><span>ZNK YKG QKKVY LGOZN COZN ZNUYK CNU ROYZKT</span></li><li><b>V</b><span>UZNKX CUXJY GXK UTRE YGRZ GTJ YVXGE</span></li><li><b>III</b><span>OT ZNK LOXYZ RKZZKXY G TGSK ROKY NOJJKT</span></li></ul></div>
+      </div>
+    </div>
+    <form class="ans" data-n="1" autocomplete="off">
+      <label for="a1">Speak the name the verse hides</label>
+      <div class="row"><input id="a1" type="text" spellcheck="false" autocapitalize="characters"><button class="btn" type="submit">Break the seal</button></div>
+      <p class="msg" aria-live="polite"></p>
+    </form>
+    <div class="hints" data-n="1"><button class="hbtn" type="button">Ask the sea for a whisper <span>(0/1)</span></button><ol></ol></div>
+  </div>
+</section>
+
+<!-- ===== II ===== -->
+<section class="card part" id="p2" data-n="2">
+  <div class="lock"><svg class="wax" viewBox="0 0 100 100"><use href="#waxs"/></svg><b>Sealed</b><span>Break the previous seal first.</span></div>
+  <div class="ph"><div class="num">II</div><h2>The Keeper's Lamp</h2></div>
+  <p class="epi">The keeper never spoke a word. He only signed the dark.</p>
+  <p class="ctag"><span>Cipher type</span>Morse code &nbsp;·&nbsp; Vigenère cipher</p>
+  <details class="how" open><summary>Cartographer's notes</summary><p><b>Morse code</b> writes letters as short and long signals. A <b>Vigenère cipher</b> is a Caesar cipher whose slide changes with every letter, following a repeating key word; to undo it, slide back by each letter of the key in turn. A cipher is only as locked as its key is hidden, and keys are often kept somewhere other than the lock. Use the buttons to slow or pause the lamp. Type a single word below.</p></details>
+  <div class="body">
+    <svg class="lighthouse" id="lh" viewBox="0 0 800 380" role="img" aria-label="A lighthouse whose lamp flashes long and short in the night">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#02070c"/><stop offset="1" stop-color="#0c2a36"/></linearGradient>
+        <linearGradient id="beamg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".85"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></linearGradient>
+        <linearGradient id="beamgl" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".85"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></linearGradient>
+      </defs>
+      <rect width="800" height="380" fill="url(#sky)"/>
+      <g fill="#cfe3ea" opacity=".75"><circle cx="70" cy="40" r="1.4"/><circle cx="160" cy="90" r="1"/><circle cx="260" cy="30" r="1.6"/><circle cx="330" cy="120" r="1"/><circle cx="470" cy="50" r="1.2"/><circle cx="600" cy="100" r="1.5"/><circle cx="700" cy="40" r="1"/><circle cx="760" cy="130" r="1.3"/><circle cx="120" cy="160" r="1"/><circle cx="540" cy="22" r="1"/></g>
+      <polygon id="beamR" points="415,118 800,40 800,210" fill="url(#beamg)" opacity="0"/>
+      <polygon id="beamL" points="385,118 0,40 0,210" fill="url(#beamgl)" opacity="0"/>
+      <path d="M0 300q60-10 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0V380H0z" fill="#07202a"/>
+      <path d="M0 330q50-8 90 0t90 0 90 0 90 0 90 0 90 0 90 0 90 0 90 0V380H0z" fill="#041319"/>
+      <path d="M250 330c20-60 70-76 150-76s130 16 150 76z" fill="#10181c"/>
+      <polygon points="372,262 428,262 416,150 384,150" fill="#d9d0bd"/>
+      <polygon points="378,235 422,235 424,215 376,215" fill="#8e1f17"/>
+      <polygon points="383,190 417,190 419,172 381,172" fill="#8e1f17"/>
+      <rect x="376" y="140" width="48" height="10" fill="#2a2a2a"/>
+      <rect x="384" y="104" width="32" height="36" fill="#1a2a30" stroke="#2a2a2a" stroke-width="3"/>
+      <polygon points="378,104 422,104 400,78" fill="#8e1f17"/>
+      <circle id="lampGlow" cx="400" cy="122" r="46" fill="#ffd36b" filter="url(#glow)" opacity="0"/>
+      <circle id="lamp" cx="400" cy="122" r="11" fill="#2b2316"/>
+      <text x="22" y="362" fill="#6f98a2" font-family="Cinzel,serif" font-size="12" letter-spacing="3">FLASHING LIGHT</text>
+    </svg>
+    <div class="lampbar">
+      <button class="btn" type="button" id="replay">Restart the lamp</button>
+      <button class="btn" type="button" id="speed" style="background:linear-gradient(180deg,#3a4a52,#1f2a30);border-color:#0d1519;box-shadow:0 3px 0 #0d1519">Speed: normal</button>
+      <button class="btn" type="button" id="pause" style="background:linear-gradient(180deg,#3a4a52,#1f2a30);border-color:#0d1519;box-shadow:0 3px 0 #0d1519">Pause</button>
+      <span class="small">The lamp repeats. A long dark marks the end of each telling.</span>
+    </div>
+    <div class="log">
+      <div class="cap">The keeper's log, sealed with what he signs</div>
+      <p class="cipher">HDPAB BZTBL MVWXW SCWYW KXBRS JIAAC CSKWL WSCOT SK</p>
+    </div>
+    <form class="ans" data-n="2" autocomplete="off">
+      <label for="a2">Name her who sings</label>
+      <div class="row"><input id="a2" type="text" spellcheck="false" autocapitalize="characters"><button class="btn" type="submit">Break the seal</button></div>
+      <p class="msg" aria-live="polite"></p>
+    </form>
+    <div class="hints" data-n="2"><button class="hbtn" type="button">Ask the sea for a whisper <span>(0/1)</span></button><ol></ol></div>
+  </div>
+</section>
+
+<!-- ===== III ===== -->
+<section class="card part" id="p3" data-n="3">
+  <div class="lock"><svg class="wax" viewBox="0 0 100 100"><use href="#waxs"/></svg><b>Sealed</b><span>Break the previous seal first.</span></div>
+  <div class="ph"><div class="num">III</div><h2>The Shoals</h2></div>
+  <p class="epi">Four walls to a pen, and a sailor's secret in every one.</p>
+  <p class="ctag"><span>Cipher type</span>Pigpen cipher &nbsp;·&nbsp; Grid path</p>
+  <details class="how" open><summary>Cartographer's notes</summary><p>The <b>pigpen cipher</b> swaps each letter for the outline of the box it sits in, taken from grids and crosses, with a dot marking the later half of the alphabet. Once the symbols speak, treat the words as orders. <b>Using the grid:</b> begin on the square marked with the skull. Each order gives a direction and a number of squares; the top of the grid is north. Move exactly that many squares, with each leg starting where the last one ended. Jot down the letter you stand on at every stop, remembering the square you began on, and read them in the order you visited them. Clicking a square marks it, which helps you keep your place. Type a single word below.</p></details>
+  <div class="body">
+    <div class="cap" style="margin-bottom:8px">Sailing orders, scratched in the mason's hand</div>
+    <div class="pigrow" role="img" aria-label="A message written in a symbol cipher"><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(27,3)"><path d="M0,18L18,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,18L18,18M0,0L0,18M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 78 24" width="78" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,0L0,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 126 24" width="126" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L18,0"/></g><g transform="translate(27,3)"><path d="M0,18L18,18M0,0L0,18M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(51,3)"><path d="M18,0L9,9L18,18"/></g><g transform="translate(75,3)"><path d="M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(99,3)"><path d="M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,0L0,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L18,0"/></g><g transform="translate(27,3)"><path d="M0,18L18,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,0L0,18"/></g><g transform="translate(75,3)"><path d="M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L18,0"/><circle cx="9" cy="4" r="1.9" class="dt"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,0L9,9L18,0"/></g><g transform="translate(75,3)"><path d="M0,0L9,9L0,18"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(51,3)"><path d="M18,0L9,9L18,18"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g></svg><svg class="pw" viewBox="0 0 126 24" width="126" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L18,0"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(51,3)"><path d="M18,0L9,9L18,18"/></g><g transform="translate(75,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(99,3)"><path d="M0,0L18,0M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 78 24" width="78" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L18,0"/><circle cx="9" cy="4" r="1.9" class="dt"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,0L9,9L18,0"/></g><g transform="translate(75,3)"><path d="M0,0L9,9L0,18"/></g></svg><svg class="pw" viewBox="0 0 126 24" width="126" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,0L0,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g><g transform="translate(99,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 126 24" width="126" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(75,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(99,3)"><path d="M0,0L18,0M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(51,3)"><path d="M18,0L9,9L18,18"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g><g transform="translate(27,3)"><path d="M0,18L18,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,0L9,9L18,0"/></g><g transform="translate(75,3)"><path d="M0,0L9,9L0,18"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(51,3)"><path d="M18,0L9,9L18,18"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g></svg><svg class="pw" viewBox="0 0 126 24" width="126" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(75,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(99,3)"><path d="M0,0L18,0M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 78 24" width="78" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L18,0"/><circle cx="9" cy="4" r="1.9" class="dt"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,0L9,9L18,0"/></g><g transform="translate(75,3)"><path d="M0,0L9,9L0,18"/></g></svg><svg class="pw" viewBox="0 0 126 24" width="126" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(27,3)"><path d="M0,0L18,0M0,0L0,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g><g transform="translate(99,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 150 24" width="150" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(27,3)"><path d="M0,18L18,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,18L18,18M0,0L0,18M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M0,0L0,18"/></g><g transform="translate(99,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(123,3)"><path d="M0,0L18,0M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18M18,0L18,18"/></g><g transform="translate(27,3)"><path d="M0,18L18,18M18,0L18,18"/></g><g transform="translate(51,3)"><path d="M0,18L18,18M0,0L0,18"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M0,0L0,18M18,0L18,18"/></g></svg><svg class="pw" viewBox="0 0 102 24" width="102" height="24" aria-hidden="true"><g transform="translate(3,3)"><path d="M0,0L9,9L18,0"/></g><g transform="translate(27,3)"><path d="M0,0L9,9L0,18"/></g><g transform="translate(51,3)"><path d="M0,0L18,0M0,18L18,18M0,0L0,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g><g transform="translate(75,3)"><path d="M0,0L18,0M18,0L18,18"/><circle cx="9" cy="9" r="1.9" class="dt"/></g></svg></div>
+    <div class="gridwrap">
+      <div>
+        <div class="compass">↑ NORTH</div>
+        <div class="grid" id="grid"><button type="button" class="gc" aria-label="grid cell"><i>R</i></button><button type="button" class="gc" aria-label="grid cell"><i>Y</i></button><button type="button" class="gc" aria-label="grid cell"><i>C</i></button><button type="button" class="gc" aria-label="grid cell"><i>K</i></button><button type="button" class="gc" aria-label="grid cell"><i>M</i></button><button type="button" class="gc" aria-label="grid cell"><i>H</i></button><button type="button" class="gc" aria-label="grid cell"><i>W</i></button><button type="button" class="gc" aria-label="grid cell"><i>L</i></button><button type="button" class="gc" aria-label="grid cell"><i>A</i></button><button type="button" class="gc" aria-label="grid cell"><i>C</i></button><button type="button" class="gc" aria-label="grid cell"><i>D</i></button><button type="button" class="gc" aria-label="grid cell"><i>P</i></button><button type="button" class="gc" aria-label="grid cell"><i>D</i></button><button type="button" class="gc" aria-label="grid cell"><i>L</i></button><button type="button" class="gc" aria-label="grid cell"><i>P</i></button><button type="button" class="gc" aria-label="grid cell"><i>C</i></button><button type="button" class="gc" aria-label="grid cell"><i>A</i></button><button type="button" class="gc" aria-label="grid cell"><i>A</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>B</i></button><button type="button" class="gc" aria-label="grid cell"><i>T</i></button><button type="button" class="gc" aria-label="grid cell"><i>P</i></button><button type="button" class="gc" aria-label="grid cell"><i>P</i></button><button type="button" class="gc" aria-label="grid cell"><i>R</i></button><button type="button" class="gc" aria-label="grid cell"><i>C</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>K</i></button><button type="button" class="gc" aria-label="grid cell"><i>M</i></button><button type="button" class="gc" aria-label="grid cell"><i>T</i></button><button type="button" class="gc" aria-label="grid cell"><i>L</i></button><button type="button" class="gc" aria-label="grid cell"><i>M</i></button><button type="button" class="gc" aria-label="grid cell"><i>H</i></button><button type="button" class="gc" aria-label="grid cell"><i>R</i></button><button type="button" class="gc" aria-label="grid cell"><i>D</i></button><button type="button" class="gc" aria-label="grid cell"><i>E</i></button><button type="button" class="gc" aria-label="grid cell"><i>H</i></button><button type="button" class="gc" aria-label="grid cell"><i>I</i></button><button type="button" class="gc" aria-label="grid cell"><i>A</i></button><button type="button" class="gc" aria-label="grid cell"><i>B</i></button><button type="button" class="gc" aria-label="grid cell"><i>S</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>F</i></button><button type="button" class="gc" aria-label="grid cell"><i>Y</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>S</i></button><button type="button" class="gc" aria-label="grid cell"><i>W</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>E</i></button><button type="button" class="gc" aria-label="grid cell"><i>R</i></button><button type="button" class="gc" aria-label="grid cell"><i>P</i></button><button type="button" class="gc" aria-label="grid cell"><i>D</i></button><button type="button" class="gc" aria-label="grid cell"><i>P</i></button><button type="button" class="gc" aria-label="grid cell"><i>R</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>A</i></button><button type="button" class="gc" aria-label="grid cell"><i>K</i></button><button type="button" class="gc" aria-label="grid cell"><i>L</i></button><button type="button" class="gc" aria-label="grid cell"><i>A</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>F</i></button><button type="button" class="gc" aria-label="grid cell"><i>P</i></button><button type="button" class="gc" aria-label="grid cell"><i>D</i></button><button type="button" class="gc" aria-label="grid cell"><i>B</i></button><button type="button" class="gc" aria-label="grid cell"><i>E</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>S</i></button><button type="button" class="gc" aria-label="grid cell"><i>I</i></button><button type="button" class="gc" aria-label="grid cell"><i>A</i></button><button type="button" class="gc" aria-label="grid cell"><i>M</i></button><button type="button" class="gc" aria-label="grid cell"><i>L</i></button><button type="button" class="gc st" aria-label="grid cell"><svg class="sk" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5C4.5 1.5 2.5 4 2.5 7c0 1.8.8 3 2 3.8V13h7v-2.2c1.2-.8 2-2 2-3.8 0-3-2-5.5-5.5-5.5z"/><circle cx="5.7" cy="7.4" r="1.5" class="eye"/><circle cx="10.3" cy="7.4" r="1.5" class="eye"/><path d="M7.4 9.6h1.2l-.6 1.4z" class="eye"/></svg><i>M</i></button><button type="button" class="gc" aria-label="grid cell"><i>C</i></button><button type="button" class="gc" aria-label="grid cell"><i>N</i></button><button type="button" class="gc" aria-label="grid cell"><i>C</i></button><button type="button" class="gc" aria-label="grid cell"><i>G</i></button><button type="button" class="gc" aria-label="grid cell"><i>D</i></button><button type="button" class="gc" aria-label="grid cell"><i>A</i></button><button type="button" class="gc" aria-label="grid cell"><i>O</i></button><button type="button" class="gc" aria-label="grid cell"><i>O</i></button><button type="button" class="gc" aria-label="grid cell"><i>S</i></button></div>
+      </div>
+      <div class="sidenote">The shoals, charted square by square. Click a square to mark it with red wax; the sea will not mind.</div>
+    </div>
+    <form class="ans" data-n="3" autocomplete="off">
+      <label for="a3">Speak what the shoals spell</label>
+      <div class="row"><input id="a3" type="text" spellcheck="false" autocapitalize="characters"><button class="btn" type="submit">Break the seal</button></div>
+      <p class="msg" aria-live="polite"></p>
+    </form>
+    <div class="hints" data-n="3"><button class="hbtn" type="button">Ask the sea for a whisper <span>(0/1)</span></button><ol></ol></div>
+  </div>
+</section>
+
+<!-- ===== IV ===== -->
+<section class="card part" id="p4" data-n="4">
+  <div class="lock"><svg class="wax" viewBox="0 0 100 100"><use href="#waxs"/></svg><b>Sealed</b><span>Break the previous seal first.</span></div>
+  <div class="ph"><div class="num">IV</div><h2>The Sexton's Psalm</h2></div>
+  <p class="epi">The sexton buried his psalm in the dark, and gave it two voices.</p>
+  <p class="ctag"><span>Cipher type</span>Bacon's cipher</p>
+  <details class="how" open><summary>Cartographer's notes</summary><p><b>Bacon's cipher</b> hides letters inside ordinary writing. Instead of changing the letters, it changes their <i>style</i>: here, an upright letter stands for <b>A</b> and a slanted (italic) letter, which is also gold, stands for <b>B</b>. Every hidden letter takes five of them. <b>How to read it:</b> move the lantern over the psalm, and write down A or B for each letter in turn, ignoring spaces. Cut your string into groups of five, then look each group up in the table below the crypt. Type the word you uncover.</p></details>
+  <div class="body">
+    <p>The crypt beneath Sexton's Reach has no windows. Carry the lantern; move it with your pointer, or tap and drag. The psalm was copied, so the old log says, from a book of the New Atlantis.</p>
+    <div class="lampbar" style="margin:0 0 10px"><button class="btn" type="button" id="wide" style="background:linear-gradient(180deg,#3a4a52,#1f2a30);border-color:#0d1519;box-shadow:0 3px 0 #0d1519">Widen the light</button></div>
+    <div class="night" id="night" aria-label="A dark crypt lit by a lantern that follows the pointer">
+      <div class="cwrap"><div class="cw"><span class="a">H</span><span class="a">e</span><span class="a">a</span><span class="a">r</span></div><div class="cw"><span class="b">h</span><span class="b">o</span><span class="a">w</span></div><div class="cw"><span class="a">t</span><span class="a">h</span><span class="a">e</span></div><div class="cw"><span class="a">w</span><span class="a">a</span><span class="b">t</span><span class="a">e</span><span class="a">r</span><span class="a">s</span></div><div class="cw"><span class="a">k</span><span class="b">e</span><span class="a">e</span><span class="a">p</span></div><div class="cw"><span class="b">t</span><span class="a">h</span><span class="b">e</span><span class="b">i</span><span class="b">r</span></div><div class="cw"><span class="a">c</span><span class="a">o</span><span class="b">u</span><span class="a">n</span><span class="a">t</span></div></div><div class="scr" style="left:3%;top:6%">~ ~ ~</div><div class="scr" style="right:4%;bottom:6%">✕</div>
+      <div class="dark" id="dark"></div><div class="glow"></div>
+    </div>
+    <div class="cap" style="margin-top:18px">The sexton's key: five symbols to a letter</div>
+    <div class="bkey"><div class="bk"><b>A</b><code>aaaaa</code></div><div class="bk"><b>B</b><code>aaaab</code></div><div class="bk"><b>C</b><code>aaaba</code></div><div class="bk"><b>D</b><code>aaabb</code></div><div class="bk"><b>E</b><code>aabaa</code></div><div class="bk"><b>F</b><code>aabab</code></div><div class="bk"><b>G</b><code>aabba</code></div><div class="bk"><b>H</b><code>aabbb</code></div><div class="bk"><b>I/J</b><code>abaaa</code></div><div class="bk"><b>K</b><code>abaab</code></div><div class="bk"><b>L</b><code>ababa</code></div><div class="bk"><b>M</b><code>ababb</code></div><div class="bk"><b>N</b><code>abbaa</code></div><div class="bk"><b>O</b><code>abbab</code></div><div class="bk"><b>P</b><code>abbba</code></div><div class="bk"><b>Q</b><code>abbbb</code></div><div class="bk"><b>R</b><code>baaaa</code></div><div class="bk"><b>S</b><code>baaab</code></div><div class="bk"><b>T</b><code>baaba</code></div><div class="bk"><b>U/V</b><code>baabb</code></div><div class="bk"><b>W</b><code>babaa</code></div><div class="bk"><b>X</b><code>babab</code></div><div class="bk"><b>Y</b><code>babba</code></div><div class="bk"><b>Z</b><code>babbb</code></div></div>
+    <form class="ans" data-n="4" autocomplete="off">
+      <label for="a4">Speak what the psalm hides</label>
+      <div class="row"><input id="a4" type="text" spellcheck="false" autocapitalize="characters"><button class="btn" type="submit">Break the seal</button></div>
+      <p class="msg" aria-live="polite"></p>
+    </form>
+    <div class="hints" data-n="4"><button class="hbtn" type="button">Ask the sea for a whisper <span>(0/1)</span></button><ol></ol></div>
+  </div>
+</section>
+
+<!-- ===== V ===== -->
+<section class="card part" id="p5" data-n="5">
+  <div class="lock"><svg class="wax" viewBox="0 0 100 100"><use href="#waxs"/></svg><b>Sealed</b><span>Break the previous seal first.</span></div>
+  <div class="ph"><div class="num">V</div><h2>Dead Man's X</h2></div>
+  <p class="epi">Four words won. One word owed.</p>
+  <p class="ctag"><span>Cipher type</span>Key extraction &nbsp;·&nbsp; Vigenère cipher</p>
+  <details class="how" open><summary>Cartographer's notes</summary><p>You are carrying four words. The chart wants one key, and the riddle says how to make it. A <b>Vigenère cipher</b> slides each letter by the matching letter of a repeating key. When the engraving speaks, set the eight dials, typing letters or using the up and down arrow keys, and open the chest.</p></details>
+  <div class="body">
+    <div class="seals" aria-hidden="true">
+      <div class="seal"><svg viewBox="0 0 100 100"><use href="#waxs"/></svg><span>I</span></div>
+      <div class="seal"><svg viewBox="0 0 100 100"><use href="#waxs"/></svg><span>II</span></div>
+      <div class="seal"><svg viewBox="0 0 100 100"><use href="#waxs"/></svg><span>III</span></div>
+      <div class="seal"><svg viewBox="0 0 100 100"><use href="#waxs"/></svg><span>IV</span></div>
+    </div>
+    <p class="riddle">Every keeper gives one letter, and the letter he gives is the one whose place is his own number: the first keeper his first, the second his second, the third his third, the fourth his fourth. Join the four and you hold the key. Run it again and again beneath the engraving, as the lamp-keeper taught you, and the chart will say its one word.</p>
+    <div class="cap center" style="margin-top:26px">The captain's engraving</div>
+    <div class="plates" role="img" aria-label="Eight engraved letters"><span class="plate">M</span><span class="plate">Z</span><span class="plate">H</span><span class="plate">E</span><span class="plate">L</span><span class="plate">C</span><span class="plate">U</span><span class="plate">I</span></div>
+    <form class="ans" data-n="5" autocomplete="off" id="f5">
+      <label class="center">Set the dials</label>
+      <div class="dials" id="dials"></div>
+      <div class="center" style="margin-top:14px"><button class="btn" type="submit">Open the chest</button></div>
+      <p class="msg center" aria-live="polite"></p>
+    </form>
+    <div class="hints" data-n="5"><button class="hbtn" type="button">Ask the sea for a whisper <span>(0/1)</span></button><ol></ol></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Look closely, and look twice. The sea hides things in plain sight.</p>
+  <p><button class="link" id="reset2" type="button">Start the voyage over</button></p>
+</footer>
+
+<div id="win" role="dialog" aria-modal="true" aria-label="Stage complete">
+  <div class="sparks" aria-hidden="true"></div>
+  <svg viewBox="0 0 160 120" aria-hidden="true"><path d="M20 58h120v50H20z" fill="#5b3a14" stroke="#2a1706" stroke-width="3"/><path d="M20 58c0-30 22-44 60-44s60 14 60 44z" fill="#7a4e1b" stroke="#2a1706" stroke-width="3"/><path d="M20 76h120M58 58v50M102 58v50" stroke="#c9962f" stroke-width="4" fill="none"/><rect x="70" y="70" width="20" height="22" rx="3" fill="#e0b24a" stroke="#2a1706" stroke-width="2"/><g fill="#ffe08a"><circle cx="60" cy="38" r="5"/><circle cx="82" cy="30" r="6"/><circle cx="104" cy="40" r="5"/></g></svg>
+  <div class="k">Stage V complete</div>
+  <div class="t">TREASURE</div>
+  <p>Captain Vane's chart is whole again, and the word it spoke is yours. Carry it to the next door.</p>
+  <button class="btn" type="button" id="closewin" style="margin-top:14px">Close</button>
+</div>
+
+<script>
+(function(){
+"use strict";
+console.log("%c  ~ The Drowned Chart ~  ","background:#8e1f17;color:#f6e4b4;font-size:16px;padding:6px");
+console.log("Looking under the deck boards? Bold. The answers are not kept here, only the locks. The sea rewards the curious, and punishes the lazy.");
+
+var KEY="drownedchart5-progress";
+var HASH={"1": "dfb507d3c11c54bd", "2": "a3132f3f4f903b91", "3": "6a32964bf6f3825d", "4": "0a4eaf3720d7cbd9", "5": "5e223bfc93c8d9c0"};
+var EV=[1, 1, 3, 1, 3, 1, 1, 3, 3, 1, 3, 1, 3, 3, 1, 1, 3, 1, 1, 1, 1, 3, 1, 1, 3, 3, 1, 1, 3, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1, 14];
+var HINTS={
+ 1:["Count the points on the rose; if your count is bigger than 26, take 26 away. Slide every letter back by that many places. Before you read the verse, look at the Roman numerals in the margin."],
+ 2:["The lamp's flashes spell a word in Morse code, and that word is the key to the log. Repeat the key under the log's letters and slide each letter back by its key letter, one at a time."],
+ 3:["Decode the symbols with the standard pigpen key: two grids and two crosses, where a dot marks the second set (J to R and W to Z). The orders start on the skull square, so count squares, not lines."],
+ 4:["Write A for every upright letter and B for every slanted gold one, in order, then cut your string into groups of five and look each group up in the key below the crypt. I and J share a code, and so do U and V."],
+ 5:["Take the 1st letter of the first answer, the 2nd letter of the second, the 3rd of the third and the 4th of the fourth. Repeat those four letters as a key under the engraving and slide each engraved letter back, as you did for the keeper's log."]
+};
+var BAD=["The sea does not answer to that.","The wax holds fast. Not that word.","A fine guess, but the seal does not budge.","Silence from the deep. Try again.","The tide takes that answer back out with it."];
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+function fnv(s,seed){var h=seed>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i)&255;h=Math.imul(h,16777619)>>>0}return h}
+function hx(h){return ("00000000"+h.toString(16)).slice(-8)}
+function hash(n,a){var s="drowned-"+n+"-"+a;return hx(fnv(s,0x811C9DC5))+hx(fnv(s.split("").reverse().join(""),0x01000193))}
+function norm(s){return String(s).toUpperCase().replace(/[^A-Z]/g,"")}
+
+var solved=0;
+try{solved=Math.max(0,Math.min(5,parseInt(localStorage.getItem(KEY),10)||0))}catch(e){}
+function save(){try{localStorage.setItem(KEY,String(solved))}catch(e){}}
+
+var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function scrollTo(el){el.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})}
+
+function render(){
+  $$(".part").forEach(function(p){var n=+p.dataset.n;p.classList.toggle("sealed",n>solved+1)});
+  $$(".stn").forEach(function(s){var n=+s.dataset.n;s.classList.remove("locked","open","done");s.classList.add(n<=solved?"done":n===solved+1?"open":"locked")});
+  $$(".seg").forEach(function(g){g.classList.toggle("lit",+g.dataset.s<=solved)});
+  $("#prog").textContent=solved;
+  lampCheck();
+}
+$$(".stn").forEach(function(s){
+  function go(){var n=+s.dataset.n;if(n<=solved+1)scrollTo($("#p"+n))}
+  s.addEventListener("click",go);
+  s.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}});
+});
+
+/* hints */
+$$(".hints").forEach(function(h){
+  var n=+h.dataset.n,shown=0,b=$("button",h),ol=$("ol",h);
+  b.addEventListener("click",function(){
+    if(shown>=HINTS[n].length)return;
+    var li=document.createElement("li");li.textContent=HINTS[n][shown];ol.appendChild(li);shown++;
+    $("span",b).textContent="("+shown+"/1)";if(shown>=HINTS[n].length)b.disabled=true;
+  });
+});
+
+/* answers */
+function wrong(form,msg){
+  var m=$(".msg",form);m.textContent=msg;m.classList.add("bad");
+  form.classList.remove("shake");void form.offsetWidth;form.classList.add("shake");
+}
+function right(n,form){
+  var m=$(".msg",form);m.classList.remove("bad");
+  if(n<=solved)return;
+  solved=n;save();render();
+  if(n<5){m.textContent="The wax cracks. The next piece of the chart is yours.";setTimeout(function(){scrollTo($("#p"+(n+1)))},700)}
+  else{m.textContent="The chest opens.";setTimeout(showWin,500)}
+}
+$$("form.ans").forEach(function(f){
+  var n=+f.dataset.n;
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    var a;
+    if(n===5){a=$$(".dial",f).map(function(d){return d.value}).join("")}else{a=$("input",f).value}
+    a=norm(a);
+    if(!a){wrong(f,n===5?"The dials are not all set.":"Say something, sailor.");return}
+    if(n===5&&a.length<8){wrong(f,"The dials are not all set.");return}
+    if(hash(n,a)===HASH[n]){right(n,f);return}
+    if(n<5&&a==="TREASURE"){wrong(f,"A tempting guess. But the chest is not within reach yet.");return}
+    wrong(f,BAD[Math.floor(Math.random()*BAD.length)]);
+  });
+});
+
+/* dials */
+var dialsBox=$("#dials");
+for(var i=0;i<8;i++){var d=document.createElement("input");d.className="dial";d.maxLength=1;d.type="text";d.autocomplete="off";d.spellcheck=false;d.setAttribute("aria-label","Dial "+(i+1));dialsBox.appendChild(d)}
+var dials=$$(".dial");
+dials.forEach(function(d,i){
+  d.addEventListener("input",function(){
+    d.value=d.value.toUpperCase().replace(/[^A-Z]/g,"").slice(-1);
+    if(d.value&&dials[i+1])dials[i+1].focus();
+  });
+  d.addEventListener("keydown",function(e){
+    var A="ABCDEFGHIJKLMNOPQRSTUVWXYZ",c=A.indexOf(d.value);
+    if(e.key==="Backspace"&&!d.value&&dials[i-1]){dials[i-1].focus();dials[i-1].value=""}
+    else if(e.key==="ArrowLeft"&&dials[i-1]){dials[i-1].focus()}
+    else if(e.key==="ArrowRight"&&dials[i+1]){dials[i+1].focus()}
+    else if(e.key==="ArrowUp"){e.preventDefault();d.value=A[(c+1+26)%26]}
+    else if(e.key==="ArrowDown"){e.preventDefault();d.value=A[(c<0?0:c-1+26)%26]}
+  });
+  d.addEventListener("focus",function(){d.select()});
+  d.addEventListener("paste",function(e){
+    var t=(e.clipboardData||window.clipboardData).getData("text").toUpperCase().replace(/[^A-Z]/g,"");
+    if(!t)return;e.preventDefault();
+    for(var k=0;k<t.length&&i+k<8;k++)dials[i+k].value=t[k];
+    (dials[Math.min(7,i+t.length)]).focus();
+  });
+});
+
+/* lamp (part II) */
+var lamp=$("#lamp"),glow=$("#lampGlow"),bR=$("#beamR"),bL=$("#beamL");
+var unit=300,idx=0,timer=null,visible=false,paused=false,speeds=[["slow",480],["normal",300],["fast",200]],sp=1;
+function setLamp(on){
+  lamp.setAttribute("fill",on?"#fff3c4":"#2b2316");
+  glow.setAttribute("opacity",on?".9":"0");
+  bR.setAttribute("opacity",on?"1":"0");bL.setAttribute("opacity",on?"1":"0");
+}
+function step(){
+  setLamp(idx%2===0);
+  var u=EV[idx];idx=(idx+1)%EV.length;
+  timer=setTimeout(step,u*unit);
+}
+function lampStop(){clearTimeout(timer);timer=null;setLamp(false)}
+function lampStart(){if(timer||paused)return;step()}
+function lampCheck(){
+  var open=!$("#p2").classList.contains("sealed");
+  if(open&&visible&&!paused)lampStart();else if(timer&&(!open||!visible))lampStop();
+}
+if("IntersectionObserver" in window){
+  new IntersectionObserver(function(en){visible=en[0].isIntersecting;lampCheck()},{threshold:.25}).observe($("#lh"));
+}else{visible=true}
+$("#replay").addEventListener("click",function(){lampStop();idx=0;paused=false;$("#pause").textContent="Pause";setTimeout(lampStart,600)});
+$("#speed").addEventListener("click",function(){sp=(sp+1)%3;unit=speeds[sp][1];this.textContent="Speed: "+speeds[sp][0]});
+$("#pause").addEventListener("click",function(){
+  if(paused){paused=false;this.textContent="Pause";lampStart()}else{paused=true;this.textContent="Resume";lampStop()}
+});
+
+/* grid (part III) */
+$$(".gc").forEach(function(c){c.addEventListener("click",function(){c.classList.toggle("on")})});
+
+/* lantern (part IV) */
+var night=$("#night"),dark=$("#dark"),glw=$(".glow",night);
+function moveLight(e){
+  var r=night.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  night.style.setProperty("--x",x+"px");night.style.setProperty("--y",y+"px");
+}
+night.addEventListener("pointermove",moveLight);
+night.addEventListener("pointerdown",moveLight);
+night.addEventListener("pointerleave",function(e){if(e.pointerType==="mouse"){night.style.setProperty("--x","-400px");night.style.setProperty("--y","-400px")}});
+$("#wide").addEventListener("click",function(){
+  var w=night.classList.toggle("wide");
+  night.style.setProperty("--r",w?"2400px":"175px");
+  this.textContent=w?"Narrow the light":"Widen the light";
+  if(w){night.style.setProperty("--x","50%");night.style.setProperty("--y","50%")}
+});
+
+/* win */
+function showWin(){
+  var w=$("#win"),sp=$(".sparks",w);
+  if(!sp.children.length){for(var i=0;i<26;i++){var s=document.createElement("i");s.style.left=(Math.random()*100)+"%";s.style.bottom=(Math.random()*30)+"%";s.style.animationDelay=(Math.random()*4)+"s";s.style.animationDuration=(3+Math.random()*3)+"s";sp.appendChild(s)}}
+  w.classList.add("show");
+}
+$("#closewin").addEventListener("click",function(){$("#win").classList.remove("show")});
+
+function reset(){
+  if(!window.confirmReset){window.confirmReset=true;this.textContent="Click again to sink the whole voyage";var b=this;setTimeout(function(){window.confirmReset=false;b.textContent="Start the voyage over"},4000);return}
+  window.confirmReset=false;solved=0;save();location.reload();
+}
+$("#reset").addEventListener("click",reset);$("#reset2").addEventListener("click",reset);
+
+render();
+if(solved>=5){var m=$(".msg",$("#f5"));m.textContent="The chest stands open. You have already spoken the word.";}
+})();
+</script>
+</body>
+</html>
